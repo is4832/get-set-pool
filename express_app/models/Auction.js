@@ -7,10 +7,11 @@ const CurrentRideSchema=new mongoose.Schema({
    status:{type:String},
 
    bids:[{
-      value:{type:String},
+      value:{type:Number},
       bidder:{type:String},
       vehicle:{type:String},
-      vehicaleNo:{type:String}
+      vehicaleNo:{type:Number}
+
    }],
    finalBidder:{type:String},
    finalValue:{type:String}

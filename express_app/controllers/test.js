@@ -12,7 +12,7 @@ const address=require("../user_contract").address2;
 
 
 
-const testnet = 'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55';
+const testnet = 'https://ropsten.infura.io/v3/da4d3f3021fd4ada9c1e70a4b607e74f';
 
 const web3 = new Web3( new Web3.providers.HttpProvider(testnet) );
 const SRC_TOKEN = "ETH";
@@ -43,14 +43,14 @@ const KYBER_NETWORK_PROXY_CONTRACT = new web3.eth.Contract(
    KYBER_NETWORK_PROXY_ADDRESS
 );
 
-const REF_ADDRESS = "0x151bdE1cfec33Af0Ad19B296B3D0843621814eD3";
+const REF_ADDRESS = "0x483C5100C3E544Aef546f72dF4022c8934a6945E";;
 
 
 
 module.exports=(app)=>{
    app.get("/test", async (req,res)=>{
       const provider=new HDwalletprovider(
-         "grow public unable lunar together element ivory scout equal elite office punch",
+         "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
          'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
        );
   
@@ -80,11 +80,12 @@ module.exports=(app)=>{
    console.log(`https://api.kyber.network/transfer_data?from=${addresss}&to=${addressr}&value=1&gas_price=medium&gas_limit=200000&nonce=${nonce}`)
    const request=await fetch(`https://api.kyber.network/transfer_data?from=${addresss}&to=${addressr}&value=1.5&gas_price=medium&gas_limit=200000&nonce=${nonce}`);
    
+   console.log("this is the request data");
    const requestData=await request.json();
    console.log(requestData);
-   // console.log( web3.utils.toWei(fare,"ether"),web3.utils.toHex(web3.utils.toWei(fare,"ether")));
+   console.log( web3.utils.toWei(fare,"ether"),web3.utils.toHex(web3.utils.toWei(fare,"ether")));
    //signs trans
-      const sender="grow public unable lunar together element ivory scout equal elite office punch";
+      const sender="41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f";
        const trans = await web3.eth.accounts.signTransaction(
          requestData.data
        ,sender);        
@@ -153,7 +154,7 @@ const broadcast=async (from, to, txData, value, gasLimit)=>{
 
    var tx = new Tx(rawTx,{ chain:'ropsten',hardfork: 'petersburg'});
    console.log(rawTx);
-   const keyBuffer=Buffer.from("grow public unable lunar together element ivory scout equal elite office punch","hex");
+   const keyBuffer=Buffer.from("41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f","hex");
    tx.sign(keyBuffer);
    const serializedTx = tx.serialize();
    console.log(serializedTx);

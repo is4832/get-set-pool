@@ -95,7 +95,7 @@ module.exports=(app)=>{
         if(req.session.username!==undefined){
         const getBidder=await CurrentRide.find({username:req.session.username});
         const provider=new HDwalletprovider(
-            "grow public unable lunar together element ivory scout equal elite office punch",
+            "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
          );
         const web3=new Web3(provider);
@@ -128,7 +128,7 @@ module.exports=(app)=>{
         const currentUser= await CurrentRide.findOneAndUpdate({username:req.session.username},{status:"MET"});
         const getBidder=await CurrentRide.find({username:req.session.username});
         const provider=new HDwalletprovider(
-            "grow public unable lunar together element ivory scout equal elite office punch",
+            "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
          );
         const web3=new Web3(provider);

@@ -52,13 +52,14 @@ module.exports=(app)=>{
         const customerUsername=req.body.username;
         const value=req.body.value;
         const provider=new HDwalletprovider(
-            "grow public unable lunar together element ivory scout equal elite office punch",
+            "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
          );
     
         const web3=new Web3(provider);
     
         console.log("provider set");
+        console.log("I am here");
     
         const contract=new web3.eth.Contract(abi,address);
     
@@ -81,7 +82,7 @@ module.exports=(app)=>{
  
         const checkFinal=await CurrentRide.find({finalBidder:req.session.username});
         const provider=new HDwalletprovider(
-            "grow public unable lunar together element ivory scout equal elite office punch",
+            "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
          );
         const web3=new Web3(provider);            
@@ -111,7 +112,7 @@ module.exports=(app)=>{
     app.post("/finald",async(req,res)=>{
         
         const provider=new HDwalletprovider(
-            "grow public unable lunar together element ivory scout equal elite office punch",
+            "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
          );
         const web=new Web3(provider);            
@@ -122,13 +123,15 @@ module.exports=(app)=>{
 
         var sender=response[0];
         var publicKeys= ethCrypto.publicKeyByPrivateKey(sender);
-        var addresss = ethCrypto.publicKey.toAddress(publicKeys);
+        //var addresss = ethCrypto.publicKey.toAddress(publicKeys);
+        var addresss= "0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7";
         console.log("sender",addresss);
         
         
         var receiver=req.session.privateKey;
         var publicKeyr = ethCrypto.publicKeyByPrivateKey(receiver);
-        var addressr = ethCrypto.publicKey.toAddress(publicKeyr);
+        //var addressr = ethCrypto.publicKey.toAddress(publicKeyr);
+        var addressr = "0x7Ed99FcCe0BE64c1519aBB90a2bB6CC75FEa8a3C";
         console.log("receiver",addressr);
 
 

@@ -18,7 +18,7 @@ const address=require("./user_contract").address2;
 
 const CurrentRide=require("./models/Auction");
 
-mongoose.connect('mongodb+srv://user-1:user@cluster0.7agbm.mongodb.net/ridex?retryWrites=true&w=majority', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://getsetpool:getsetpool@cluster0.7agbm.mongodb.net/ridex?retryWrites=true&w=majority', {useNewUrlParser: true});
 
 const app=express();
 
