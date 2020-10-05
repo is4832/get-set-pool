@@ -101,18 +101,21 @@ module.exports=(app)=>{
         const web3=new Web3(provider);
     
         console.log("provider set");
-    
+
         const contract=new web3.eth.Contract(abi,address);
-        console.log(getBidder[0]);
+
+        console.log(getBidder[0].from);
+        console.log(getBidder[0].Coordinates);
         const response=await contract.methods.get(getBidder[0].finalBidder).call();
-        
+       
+        console.log(response);
+
         const final={
             name:response['5'],
             phoneNumber:response['1'],
             value:getBidder[0].finalValue,
             vehicle:response['2'],
             vehicleNo:response['3']
-
         }
         const status=getBidder[0].status;
         if(status==="MET"){
@@ -138,14 +141,15 @@ module.exports=(app)=>{
         const contract=new web3.eth.Contract(abi,address);
         // console.log(;
         const response=await contract.methods.get(getBidder[0].finalBidder).call();
-        
+        console.log(response);
+        console.log("I am here..!");
+        console.log(getBidder[0]);
         const final={
             name:response['5'],
             phoneNumber:response['1'],
             value:getBidder[0].finalValue,
             vehicle:response['2'],
             vehicleNo:response['3']
-
         }
 
 

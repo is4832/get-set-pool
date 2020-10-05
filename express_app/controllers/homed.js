@@ -51,6 +51,7 @@ module.exports=(app)=>{
     app.post("/homed",async(req,res)=>{
         const customerUsername=req.body.username;
         const value=req.body.value;
+        const coord=req.body.coordinates;
         const provider=new HDwalletprovider(
             "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
@@ -60,7 +61,8 @@ module.exports=(app)=>{
 
         console.log("provider set");
         console.log("I am here");
-
+        console.log(req.body);
+    
         const contract=new web3.eth.Contract(abi,address);
 
         const response=await contract.methods.get(req.session.username).call();
@@ -69,9 +71,9 @@ module.exports=(app)=>{
             value:value,
             bidder:req.session.username,
             vehicle:response['2'],
-            vehicaleNo:response['3']
+            vehicaleNo:response['3'],
         }
-        const insertValue=await CurrentRide.findOneAndUpdate({username:customerUsername},{$push:{bids:bid}});
+        const insertValue=await CurrentRide.findOneAndUpdate({username:customerUsername},{Coordinates:coord,$push:{bids:bid}});
         console.log(insertValue);
         res.redirect("/homed");
     });

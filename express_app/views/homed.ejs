@@ -1971,7 +1971,7 @@ window.application = application;
 			</rect>
 		</svg>
 		<div id="Bid" class="Rectangle_23">
-			<button type="submit"> Bid</button>
+			<button id="bid_button" type="submit"> Bid</button>
 		</div>
 	</div>
 
@@ -1981,10 +1981,38 @@ window.application = application;
 		  <input name="value" type="text" placeholder="1.0 ETH"/>
 	</div>
 
-                &nbsp;<input name="username"  type="hidden"  value="<%= rides[i].username%>">
+				&nbsp;<input name="username"  type="hidden"  value="<%= rides[i].username%>">
+				<input name="coordinates"  type="hidden"  id="coordinates"> 
 	</form>
 
             <% }%>
 </div>
+<script>
+	function getLocation() {
+	  if (navigator.geolocation) {
+		
+		var geoError = function(code,message){
+			document.getElementById("bid_button").disabled = true;
+			alert("Please allow your location..!");
+		};
+		
+		document.getElementById("bid_button").disabled = false;
+		navigator.geolocation.getCurrentPosition(showPosition,geoError);
+	  } else {
+		document.getElementById("bid_button").disabled = true;
+		alert("Please allow your location..!");
+	  }
+	}
+	
+	function showPosition(position) {
+	  //x.innerHTML = "Latitude: " + position.coords.latitude +
+	  //"<br>Longitude: " + position.coords.longitude;
+	  console.log("Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude);
+	  document.getElementById("coordinates").value=position.coords.latitude + " "+ position.coords.longitude;
+    
+	}
+
+    getLocation();
+</script>
 </body>
 </html>

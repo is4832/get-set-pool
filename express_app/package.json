@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "watch": "nodemon ./app.js",
     "start": "node app.js"
   },
   "author": "",

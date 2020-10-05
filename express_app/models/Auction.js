@@ -10,11 +10,13 @@ const CurrentRideSchema=new mongoose.Schema({
       value:{type:Number},
       bidder:{type:String},
       vehicle:{type:String},
-      vehicaleNo:{type:Number}
+      vehicaleNo:{type:Number},
 
    }],
    finalBidder:{type:String},
-   finalValue:{type:String}
+   finalValue:{type:String},
+   Coordinates:{type:String}
+
 });
 
 const CurrentRide=mongoose.model("CurentRide",CurrentRideSchema);
