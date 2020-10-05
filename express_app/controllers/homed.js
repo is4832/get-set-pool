@@ -11,9 +11,9 @@ const Tx = require('ethereumjs-tx').Transaction;
 
 module.exports=(app)=>{
     app.get("/homed",async (req,res)=>{
-        
+
         if(req.session.username!==undefined){
-            
+
             if(req.session.userType==="Driver"){
                 const findExisting= await CurrentRide.find({'bids.bidder':req.session.username});
                 console.log(findExisting);
@@ -26,7 +26,7 @@ module.exports=(app)=>{
                     }else{
                         res.redirect("/finald");
                     }
-                  
+
                 }else{
                     const currentBid=findExisting[0];
                     let value;
@@ -39,14 +39,14 @@ module.exports=(app)=>{
                     res.render("dbid",{from:currentBid.from,to:currentBid.to,value:value,status:"pending"});
                 }
 
-                
+
             }else{
                 res.render("homer",{});
             }
         }else{
             res.redirect("/");
         }
-        
+
     });
     app.post("/homed",async(req,res)=>{
         const customerUsername=req.body.username;
@@ -55,14 +55,14 @@ module.exports=(app)=>{
             "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
          );
-    
+
         const web3=new Web3(provider);
-    
+
         console.log("provider set");
         console.log("I am here");
-    
+
         const contract=new web3.eth.Contract(abi,address);
-    
+
         const response=await contract.methods.get(req.session.username).call();
         console.log(value,response);
         const bid={
@@ -74,20 +74,20 @@ module.exports=(app)=>{
         const insertValue=await CurrentRide.findOneAndUpdate({username:customerUsername},{$push:{bids:bid}});
         console.log(insertValue);
         res.redirect("/homed");
-    });  
+    });
 
 
     app.get("/finald",async(req,res)=>{
         if(req.session.username!==undefined){
- 
+
         const checkFinal=await CurrentRide.find({finalBidder:req.session.username});
         const provider=new HDwalletprovider(
             "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
             'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
          );
-        const web3=new Web3(provider);            
+        const web3=new Web3(provider);
         const contract=new web3.eth.Contract(abi,address);
-        
+
         const response=await contract.methods.get(checkFinal[0].username).call();
         console.log(response);
         const customer={
@@ -110,88 +110,130 @@ module.exports=(app)=>{
 
     });
     app.post("/finald",async(req,res)=>{
-        
-        const provider=new HDwalletprovider(
-            "41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f",
-            'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
-         );
-        const web=new Web3(provider);            
-        const contract=new web.eth.Contract(abi,address);
-    
-        const response=await contract.methods.get(req.body.username).call();
-        console.log(response);
-
-        var sender=response[0];
-        var publicKeys= ethCrypto.publicKeyByPrivateKey(sender);
-        //var addresss = ethCrypto.publicKey.toAddress(publicKeys);
-        var addresss= "0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7";
-        console.log("sender",addresss);
-        
-        
-        var receiver=req.session.privateKey;
-        var publicKeyr = ethCrypto.publicKeyByPrivateKey(receiver);
-        //var addressr = ethCrypto.publicKey.toAddress(publicKeyr);
-        var addressr = "0x7Ed99FcCe0BE64c1519aBB90a2bB6CC75FEa8a3C";
-        console.log("receiver",addressr);
 
 
+        let web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'));
+
+
+        const sender_address = '0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7';
+        const sender_privateKey = '41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f';
+        // var contract = new web3.eth.Contract(contract_abi,contract_address);
+        var contract=new web3.eth.Contract(abi,address);
         var fare=req.body.value;
-        const testnet = 'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55';
 
-        const web3 = new Web3( new Web3.providers.HttpProvider(testnet) );
+        web3.eth.getTransactionCount(sender_address).then((txnCount =>{
 
-        web3.eth.defaultAccount = addresss;
-        console.log( web3.utils.toWei(fare,"ether"),web3.utils.toHex(web3.utils.toWei(fare,"ether")));
-        //signs trans
+            //
+            let rawTxn = {
+                nonce: web3.utils.toHex(txnCount),
+                from: sender_address,
+                to: address,
+                gas: web3.utils.toHex('2000000'),
+                gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+                data: contract.methods.setFinalBid(
+                    req.session.username,
+                    req.body.username,
+                ).encodeABI()
+            }
 
-            const trans = await web3.eth.accounts.signTransaction({
-            nonce : web3.eth.getTransactionCount(web3.eth.defaultAccount),
-            to: addressr,
-            value: web3.utils.toWei(fare,"ether"),
-            gas: 2000000
-            }, sender);        
 
-            const rawTrans=trans['rawTransaction'];
-            console.log(trans['rawTransaction']);
-        //send sign transc
+            var bufferPK = new Buffer.from(sender_privateKey, 'hex');
+            var tx = new Tx(rawTxn,{chain:'ropsten'});
+            tx.sign(bufferPK);
+            var serializedTx = tx.serialize();
 
-         var privateKey = new Buffer.from(sender.slice(2), 'hex');
+            web3.eth.sendSignedTransaction("0x" + serializedTx.toString('hex'), async (_err, _res) => {
+                if(_err){
+                    console.error("ERROR: ", _err);
+                } else {
+                    console.log("Success: ", _res);
+                    const deleteAuction = await CurrentRide.findOneAndDelete({username:req.body.username});
+                    res.render("payed",{fare:fare,from:deleteAuction.from,to:deleteAuction.to});
+                }
+            })
+            .on('error', console.error);
 
-        // var nonce = web3.eth.getTransactionCount(web3.eth.defaultAccount);
-        // var rawTx = {
-        //   nonce: nonce,
-        //   gasPrice: 21000,
-        //   gasLimit: '0x2710',
-        //   to: receiver,
-        //   value:  web3.utils.toHex(web3.utils.toWei(fare,"ether")),
-        //   //data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
+        }));
+
+
+
+
+
+
+
+        // const response=await contract.methods.get(req.body.username).call();
+        // console.log(response);
+
+        // var sender=response[0];
+        // var publicKeys= ethCrypto.publicKeyByPrivateKey(sender);
+        // //var addresss = ethCrypto.publicKey.toAddress(publicKeys);
+        // var addresss= "0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7";
+        // console.log("sender",addresss);
+
+
+        // var receiver=req.session.privateKey;
+        // var publicKeyr = ethCrypto.publicKeyByPrivateKey(receiver);
+        // //var addressr = ethCrypto.publicKey.toAddress(publicKeyr);
+        // var addressr = "0x7Ed99FcCe0BE64c1519aBB90a2bB6CC75FEa8a3C";
+        // console.log("receiver",addressr);
+
+
+        //
+        // const testnet = 'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55';
+
+        // const web3 = new Web3( new Web3.providers.HttpProvider(testnet) );
+
+        // web3.eth.defaultAccount = addresss;
+        // console.log( web3.utils.toWei(fare,"ether"),web3.utils.toHex(web3.utils.toWei(fare,"ether")));
+        // //signs trans
+
+        //     const trans = await web3.eth.accounts.signTransaction({
+        //         nonce : web3.eth.getTransactionCount(web3.eth.defaultAccount),
+        //         to: addressr,
+        //         value: web3.utils.toWei(fare,"ether"),
+        //         gas: 2000000,
+        //         gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        //     }, sender);
+
+        //     const rawTrans=trans['rawTransaction'];
+        //     console.log(trans['rawTransaction']);
+        // //send sign transc
+
+        //  var privateKey = new Buffer.from(sender.slice(2), 'hex');
+
+        // // var nonce = web3.eth.getTransactionCount(web3.eth.defaultAccount);
+        // // var rawTx = {
+        // //   nonce: nonce,
+        // //   gasPrice: 21000,
+        // //   gasLimit: '0x2710',
+        // //   to: receiver,
+        // //   value:  web3.utils.toHex(web3.utils.toWei(fare,"ether")),
+        // //   //data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
+        // // }
+
+        // //with raw Transaction
+        // var tx = new Tx(rawTrans,{ chain:'ropsten',hardfork: 'petersburg'});
+        // tx.sign(privateKey);
+
+        // var serializedTx = tx.serialize();
+
+        // console.log(serializedTx.toString('hex'),"serialized");
+        // // 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f
+        // try{
+        //     var payment= await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('receipt', console.log);
+
+        //     contract.methods.setFinalBid(req.session.username,req.body.username).send({
+        //         from:"0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7"
+        //     }).then((response)=>{
+        //         console.log(response);
+        //     });
+
+
         // }
-
-        //with raw Transaction
-        var tx = new Tx(rawTrans,{ chain:'ropsten',hardfork: 'petersburg'});
-        tx.sign(privateKey);
-        
-        var serializedTx = tx.serialize();
-        
-        console.log(serializedTx.toString('hex'),"serialized");
-        // 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f
-        try{
-            var payment= await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('receipt', console.log);
-            
-            contract.methods.setFinalBid(req.session.username,req.body.username).send({
-                from:"0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7"
-            }).then((response)=>{
-                console.log(response);
-            });
-            
-            const deleteAuction = await CurrentRide.findOneAndDelete({username:req.body.username});
-            
-            res.render("payed",{fare:fare,from:deleteAuction.from,to:deleteAuction.to});
-        }
-        catch(err){
-            console.log(err);
-        }
+        // catch(err){
+        //     console.log(err);
+        // }
     });
 
- 
+
 }
