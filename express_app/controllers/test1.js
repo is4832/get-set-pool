@@ -1,77 +1,87 @@
-const express=require("express");
-const Web3=require("web3");
-const HDwalletprovider=require("truffle-hdwallet-provider");
-const bparser=require("body-parser");
-const session=require("express-session");
+const Web3 = require('web3');
 const Tx = require('ethereumjs-tx').Transaction;
-const fetch=require("node-fetch"); 
+let web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'));
 
-const abi=require("../user_contract").abi2;
-const address=require("../user_contract").address2;
+const sender_address = '0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7';
+const sender_privateKey = '41362a4b6f3905e8b9a653620cdb4adbfad0e47b1061aa03d17d6208300eef9f';
+const reciever_address = '0x151bdE1cfec33Af0Ad19B296B3D0843621814eD3';
+
+const KyberNetworkProxy_ABI = [{"inputs":[{"internalType":"address","name":"_admin","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"}],"name":"AdminClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"newAlerter","type":"address"},{"indexed":false,"internalType":"bool","name":"isAdd","type":"bool"}],"name":"AlerterAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"address","name":"sendTo","type":"address"}],"name":"EtherWithdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"trader","type":"address"},{"indexed":false,"internalType":"contract IERC20","name":"src","type":"address"},{"indexed":false,"internalType":"contract IERC20","name":"dest","type":"address"},{"indexed":false,"internalType":"address","name":"destAddress","type":"address"},{"indexed":false,"internalType":"uint256","name":"actualSrcAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"actualDestAmount","type":"uint256"},{"indexed":false,"internalType":"address","name":"platformWallet","type":"address"},{"indexed":false,"internalType":"uint256","name":"platformFeeBps","type":"uint256"}],"name":"ExecuteTrade","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"contract IKyberHint","name":"kyberHintHandler","type":"address"}],"name":"KyberHintHandlerSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"contract IKyberNetwork","name":"newKyberNetwork","type":"address"},{"indexed":false,"internalType":"contract IKyberNetwork","name":"previousKyberNetwork","type":"address"}],"name":"KyberNetworkSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"newOperator","type":"address"},{"indexed":false,"internalType":"bool","name":"isAdd","type":"bool"}],"name":"OperatorAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"contract IERC20","name":"token","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"address","name":"sendTo","type":"address"}],"name":"TokenWithdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"pendingAdmin","type":"address"}],"name":"TransferAdminPending","type":"event"},{"inputs":[{"internalType":"address","name":"newAlerter","type":"address"}],"name":"addAlerter","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOperator","type":"address"}],"name":"addOperator","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"admin","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"enabled","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAlerters","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract ERC20","name":"src","type":"address"},{"internalType":"contract ERC20","name":"dest","type":"address"},{"internalType":"uint256","name":"srcQty","type":"uint256"}],"name":"getExpectedRate","outputs":[{"internalType":"uint256","name":"expectedRate","type":"uint256"},{"internalType":"uint256","name":"worstRate","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"src","type":"address"},{"internalType":"contract IERC20","name":"dest","type":"address"},{"internalType":"uint256","name":"srcQty","type":"uint256"},{"internalType":"uint256","name":"platformFeeBps","type":"uint256"},{"internalType":"bytes","name":"hint","type":"bytes"}],"name":"getExpectedRateAfterFee","outputs":[{"internalType":"uint256","name":"expectedRate","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getOperators","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"kyberHintHandler","outputs":[{"internalType":"contract IKyberHint","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"kyberNetwork","outputs":[{"internalType":"contract IKyberNetwork","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxGasPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pendingAdmin","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"alerter","type":"address"}],"name":"removeAlerter","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"}],"name":"removeOperator","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IKyberHint","name":"_kyberHintHandler","type":"address"}],"name":"setHintHandler","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IKyberNetwork","name":"_kyberNetwork","type":"address"}],"name":"setKyberNetwork","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"token","type":"address"},{"internalType":"uint256","name":"minConversionRate","type":"uint256"}],"name":"swapEtherToToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"token","type":"address"},{"internalType":"uint256","name":"srcAmount","type":"uint256"},{"internalType":"uint256","name":"minConversionRate","type":"uint256"}],"name":"swapTokenToEther","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"src","type":"address"},{"internalType":"uint256","name":"srcAmount","type":"uint256"},{"internalType":"contract IERC20","name":"dest","type":"address"},{"internalType":"uint256","name":"minConversionRate","type":"uint256"}],"name":"swapTokenToToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"src","type":"address"},{"internalType":"uint256","name":"srcAmount","type":"uint256"},{"internalType":"contract IERC20","name":"dest","type":"address"},{"internalType":"address payable","name":"destAddress","type":"address"},{"internalType":"uint256","name":"maxDestAmount","type":"uint256"},{"internalType":"uint256","name":"minConversionRate","type":"uint256"},{"internalType":"address payable","name":"platformWallet","type":"address"}],"name":"trade","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"contract ERC20","name":"src","type":"address"},{"internalType":"uint256","name":"srcAmount","type":"uint256"},{"internalType":"contract ERC20","name":"dest","type":"address"},{"internalType":"address payable","name":"destAddress","type":"address"},{"internalType":"uint256","name":"maxDestAmount","type":"uint256"},{"internalType":"uint256","name":"minConversionRate","type":"uint256"},{"internalType":"address payable","name":"walletId","type":"address"},{"internalType":"bytes","name":"hint","type":"bytes"}],"name":"tradeWithHint","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"src","type":"address"},{"internalType":"uint256","name":"srcAmount","type":"uint256"},{"internalType":"contract IERC20","name":"dest","type":"address"},{"internalType":"address payable","name":"destAddress","type":"address"},{"internalType":"uint256","name":"maxDestAmount","type":"uint256"},{"internalType":"uint256","name":"minConversionRate","type":"uint256"},{"internalType":"address payable","name":"platformWallet","type":"address"},{"internalType":"uint256","name":"platformFeeBps","type":"uint256"},{"internalType":"bytes","name":"hint","type":"bytes"}],"name":"tradeWithHintAndFee","outputs":[{"internalType":"uint256","name":"destAmount","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"newAdmin","type":"address"}],"name":"transferAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newAdmin","type":"address"}],"name":"transferAdminQuickly","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address payable","name":"sendTo","type":"address"}],"name":"withdrawEther","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"token","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"sendTo","type":"address"}],"name":"withdrawToken","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+const KyberNetworkProxy_Address = '0xd719c34261e099Fdb33030ac8909d5788D3039C4';
+
+let KyberNetworkProxy = new web3.eth.Contract(KyberNetworkProxy_ABI,KyberNetworkProxy_Address);
+
+let SRC_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';  // ETH from https://developer.kyber.network/docs/Addresses-Ropsten/
+let SRC_AMT = '1';
+let SRC_QTY = web3.utils.toWei(SRC_AMT, 'ether');
+let DST_TOKEN_ADDRESS = '0xaD6D458402F60fD3Bd25163575031ACDce07538D'; // DAI from https://developer.kyber.network/docs/Addresses-Ropsten/
+
+web3.eth.getTransactionCount(sender_address).then((txnCount =>{
+
+    KyberNetworkProxy.methods.getExpectedRate(SRC_TOKEN_ADDRESS, DST_TOKEN_ADDRESS, SRC_QTY).call((error, result)=>{
+        if (!error){
+
+            let minConversionRate = result.worstRate.toString();
+
+            let rawTxn = {
+                nonce: web3.utils.toHex(txnCount),
+                from: sender_address,
+                to: KyberNetworkProxy_Address,
+                gas: web3.utils.toHex(2000000),
+                gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+                data: KyberNetworkProxy.methods.swapEtherToToken(
+                    DST_TOKEN_ADDRESS,
+                    minConversionRate
+                ).encodeABI(),
+                value: '1'
+            }
+
+            var bufferPK = new Buffer.from(sender_privateKey, 'hex');
+            var tx = new Tx(rawTxn,{chain:'ropsten'});
+            tx.sign(bufferPK);
+            var serializedTx = tx.serialize();
+
+            web3.eth.sendSignedTransaction("0x" + serializedTx.toString('hex'), (_err, _res) => {
+                if(_err){
+                    console.error("ERROR: ", _err);
+                } else {
+                    console.log("Success: ", _res);
+                }
+            })
+            .on('error', console.error);
+
+        }
+        else {
+            console.log(error);
+        }
+    });
+
+}));
+
+web3.eth.getTransactionCount(sender_address).then((txnCount => {
+    //
+    let rawTxn = {
+        nonce: web3.utils.toHex(txnCount),
+        from: sender_address,
+        to: reciever_address,
+        gas: web3.utils.toHex('2000000'),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        value: '1'
+    }
 
 
-module.exports=(app)=>{
-   app.get("/test", async (req,res)=>{
-      const provider=new HDwalletprovider(
-        "grow public unable lunar together element ivory scout equal elite office punch",
-        'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55'
-       );
-  
-       const web3=new Web3(provider);
-  
-       console.log("provider set");
-  
-       const contract=new web3.eth.Contract(abi,address);
-  
-       const response=await contract.methods.get("priyam").call();
-       console.log(response);
-  
-  
-  
-     
-  });
-  app.get("/kyber",async (req,res)=>{
-   const testnet = 'https://ropsten.infura.io/v3/686f18f4f3144751bd5828b7155d0c55';
+    var bufferPK = new Buffer.from(sender_privateKey, 'hex');
+    var tx = new Tx(rawTxn, { chain: 'ropsten' });
+    tx.sign(bufferPK);
+    var serializedTx = tx.serialize();
 
-   const web3 = new Web3( new Web3.providers.HttpProvider(testnet) );
+    web3.eth.sendSignedTransaction("0x" + serializedTx.toString('hex'), async (_err, _res) => {
+        if (_err) {
+            console.error("ERROR: ", _err);
+        } else {
+            console.log("Success: ", _res);
+        }
+    })
+        .on('error', console.error);
 
-   // console.log(fetch);
-   const addresss="0x3c6b8c5a05FB705cE825D3C6336ebA0B60d381d7";
-   const addressr="0x7Ed99FcCe0BE64c1519aBB90a2bB6CC75FEa8a3C";
-   web3.eth.defaultAccount =addresss;
-   const nonce=await web3.eth.getTransactionCount(web3.eth.defaultAccount);
-   console.log(`https://api.kyber.network/transfer_data?from=${addresss}&to=${addressr}&value=1&gas_price=medium&gas_limit=200000&nonce=${nonce}`)
-   const request=await fetch(`https://api.kyber.network/transfer_data?from=${addresss}&to=${addressr}&value=1.5&gas_price=medium&gas_limit=200000&nonce=${nonce}`);
-   
-   const requestData=await request.json();
-   console.log(requestData);
-    console.log( web3.utils.toWei(fare,"ether"),web3.utils.toHex(web3.utils.toWei(fare,"ether")));
-   //signs trans
-      const sender="grow public unable lunar together element ivory scout equal elite office punch";
-       const trans = await web3.eth.accounts.signTransaction(
-         requestData.data
-       ,sender);        
-     
-       const rawTrans=trans['rawTransaction'];
-      
-       console.log(trans['rawTransaction']);
-      //send sign transc
-
-   var privateKey = new Buffer.from(sender, 'hex');
-
-   //with raw Transaction
-   var tx = new Tx(rawTrans,{ chain:'ropsten',hardfork: 'petersburg'});
-   tx.sign(privateKey);
-   
-   var serializedTx = tx.serialize();
-   
-   console.log(serializedTx.toString('hex'),"serialized");
-   // 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f
-   
-   var payment= await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('receipt', console.log);
-   console.log(payment,"payment");
-
-  });
-
-
-}
+}));
