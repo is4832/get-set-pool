@@ -35,6 +35,7 @@ module.exports=(app)=>{
         var vehicleNo=req.body.vehicle_num;
         var userType = 'Driver';
 
+        console.log(phno,name);
         // Creating identity
         var identity=createIdentity();
 

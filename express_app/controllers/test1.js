@@ -16,9 +16,12 @@ let SRC_AMT = '1';
 let SRC_QTY = web3.utils.toWei(SRC_AMT, 'ether');
 let DST_TOKEN_ADDRESS = '0xaD6D458402F60fD3Bd25163575031ACDce07538D'; // DAI from https://developer.kyber.network/docs/Addresses-Ropsten/
 
+<<<<<<< HEAD
 let ERC20_ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"INITIAL_SUPPLY","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"burn","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_name","type":"string"},{"name":"_symbol","type":"string"},{"name":"_decimals","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_burner","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Burn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}];
 let DAI = new web3.eth.Contract(ERC20_ABI, DST_TOKEN_ADDRESS);
 
+=======
+>>>>>>> dc4475f... final
 web3.eth.getTransactionCount(sender_address).then((txnCount =>{
 
     KyberNetworkProxy.methods.getExpectedRate(SRC_TOKEN_ADDRESS, DST_TOKEN_ADDRESS, SRC_QTY).call((error, result)=>{
@@ -48,7 +51,11 @@ web3.eth.getTransactionCount(sender_address).then((txnCount =>{
                 if(_err){
                     console.error("ERROR: ", _err);
                 } else {
+<<<<<<< HEAD
                     console.log("[SWAP TXN] Success: ", _res);
+=======
+                    console.log("Success: ", _res);
+>>>>>>> dc4475f... final
                 }
             })
             .on('error', console.error);
@@ -59,6 +66,7 @@ web3.eth.getTransactionCount(sender_address).then((txnCount =>{
         }
     });
 
+<<<<<<< HEAD
 })).then(()=>{
 
     web3.eth.getTransactionCount(sender_address).then((txnCount => {
@@ -93,3 +101,34 @@ web3.eth.getTransactionCount(sender_address).then((txnCount =>{
     }));
 
 });
+=======
+}));
+
+web3.eth.getTransactionCount(sender_address).then((txnCount => {
+    //
+    let rawTxn = {
+        nonce: web3.utils.toHex(txnCount),
+        from: sender_address,
+        to: reciever_address,
+        gas: web3.utils.toHex('2000000'),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+        value: '1'
+    }
+
+
+    var bufferPK = new Buffer.from(sender_privateKey, 'hex');
+    var tx = new Tx(rawTxn, { chain: 'ropsten' });
+    tx.sign(bufferPK);
+    var serializedTx = tx.serialize();
+
+    web3.eth.sendSignedTransaction("0x" + serializedTx.toString('hex'), async (_err, _res) => {
+        if (_err) {
+            console.error("ERROR: ", _err);
+        } else {
+            console.log("Success: ", _res);
+        }
+    })
+        .on('error', console.error);
+
+}));
+>>>>>>> dc4475f... final

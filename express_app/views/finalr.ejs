@@ -4,6 +4,11 @@
 <meta charset="utf-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <title>14 Android</title>
+<script
+      //src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyAWnZM8DdQqZ2pBCfJIq33maxJyIy9GpUI"
+	  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWnZM8DdQqZ2pBCfJIq33maxJyIy9GpUI&callback=initMap&libraries=&v=weekly" 
+	  defer
+	></script>
 <style id="applicationStylesheet" type="text/css">
 	button{
 		background-color: purple; /* Green */
@@ -172,7 +177,7 @@
 	}
 	#Driver_arriving_in {
 		position: absolute;
-		left: 117px;
+		left: 120px;
 		top: 371px;
 		overflow: visible;
 		width: 127px;
@@ -1836,10 +1841,10 @@ window.application = application;
 		<span><%=final.name%></span>
 	</div>
 	<div id="Your_ride_has_been_confirmed__">
-		<span>Your ride has been confirmed! 🎉</span>
+		<span><%=final.ridestatus%></span>
 	</div>
 	<div id="Driver_arriving_in">
-		<span>Driver arriving in</span>
+		<span><%=final.msg%></span>
 	</div>
 	<div id="Wanna_contact_your_driver_">
 		<span>Wanna contact your driver?</span>
@@ -1852,7 +1857,7 @@ window.application = application;
 		<span> <%=final.value%> ETH</span>
 	</div>
 	<div id="ID4_mins">
-		<span>4min</span>
+		<span> <%=final.time%> </span>
 	</div>
 	<div id="Drop_at">
 		<span>Vehicle Name and Number</span>
@@ -1874,7 +1879,7 @@ window.application = application;
             	
 
                   <button>
-               Bingo
+               Start Ride
               </button>
 
             
