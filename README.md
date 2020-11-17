@@ -36,7 +36,8 @@
 
 
 <h4 > GetSetPool </h4>
-[![Watch the video](https://i.imgur.com/Kg1lTNe.jpg)](https://youtu.be/c90ddA9GV_A)
+[![WATCH THE VIDEO HERE](https://img.youtube.com/vi/c90ddA9GV_A/0.jpg)](https://www.youtube.com/watch?v=c90ddA9GV_A)
+
 
 
 
