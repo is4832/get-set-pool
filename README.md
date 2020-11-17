@@ -37,7 +37,7 @@
 ------------------------------------------
 ### GetSetPool Youtube Video
 
-[![Watch it here](https://gifs.com/gif/getsetpool-wVJV5X)](https://www.youtube.com/watch?v=c90ddA9GV_A)
+[![Watch it here](https://j.gifs.com/wVJV5X.gif)](https://www.youtube.com/watch?v=c90ddA9GV_A)
 
 
 
