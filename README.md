@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=100px src="./express_app/public/assests/Pool.png" alt="Ridex-logo"></a>
+ <img width=260px src="./express_app/public/assests/Pool.png" alt="Ridex-logo"></a>
 </p>
 
 <h3 align="center">Decentralized Ride Service</h3>
@@ -34,14 +34,12 @@
  - `Transparency for Govt.` As and when many country's local Govt. are asking Ola and Uber to comply with local rules which might hinder their earnings and net profit. After a few years, the prices may be the same or more than the local taxi vendors.
 
 
-<div align="center">
 
 <h3 > GetSetPool </h3>
 <br>
 <iframe width="500" height="350" src="https://youtu.be/c90ddA9GV_A">
 </iframe>
 
-</div>
 
 ------------------------------------------
 
