@@ -34,11 +34,15 @@
  - `Transparency for Govt.` As and when many country's local Govt. are asking Ola and Uber to comply with local rules which might hinder their earnings and net profit. After a few years, the prices may be the same or more than the local taxi vendors.
 
 
-------------------------------------------
-### GetSetPool Youtube Video
+<div align="center">
 
-[![Watch it here](https://j.gifs.com/wVJV5X.gif)](https://www.youtube.com/watch?v=c90ddA9GV_A)
+<h3 > RideX </h3>
+<br>
+<p align="center">
+<img src ="https://j.gifs.com/81Q17j.gif" width = 500px>
+</p>
 
+</div>
 
 
 
