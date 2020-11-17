@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=300px src="./express_app/public/assests/Pool.png" alt="Ridex-logo"></a>
+ <img width=100px src="./express_app/public/assests/Pool.png" alt="Ridex-logo"></a>
 </p>
 
 <h3 align="center">Decentralized Ride Service</h3>
@@ -38,10 +38,8 @@
 
 <h3 > GetSetPool </h3>
 <br>
-<p align="center">
 <iframe width="500" height="350" src="https://youtu.be/c90ddA9GV_A">
 </iframe>
-</p>
 
 </div>
 
