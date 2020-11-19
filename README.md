@@ -36,7 +36,7 @@
 
 <div align="center">
 
-<h3 > RideX </h3>
+<h3 > GetSetPool </h3>
 <br>
 <p align="center">
 <img src ="https://j.gifs.com/81Q17j.gif" width = 500px>
