@@ -86,10 +86,6 @@
 
  We're are open to `enhancements` & `bug-fixes` :smile: 
 
-### Note
-
-- This project was done under `36 hours with minimal pre-preparation`
-
 ------------------------------------------
 ### Contributors
 
